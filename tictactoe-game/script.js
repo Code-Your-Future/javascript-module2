@@ -1,6 +1,6 @@
 	var player = 1;
 	var moves = 0;
-	var flag=0;
+	var flag=0; // To control the user to play the game while the game is over and to style the diagonals 
 /**
 	* Declare the two pair diagonals array to store values (X/O) and class Name
 	* @type {diagonals1<array>}  
@@ -25,24 +25,30 @@ function reset(){
 	}
 	
 	moves = 0;
+	document.getElementById('message').innerHTML=null;
+	clearArray();
+}
+
+/**
+	* Define the function to clear diagonals values container 
+*/
+function clearArray(){
 	flag=0;
 	diagonals1.splice(0,diagonals1.length);
 	diagonals2.splice(0,diagonals2.length);
 	diagonal1ClassName.splice(0,diagonal1ClassName.length);
 	diagonal2ClassName.splice(0,diagonal2ClassName.length);
-
 }
 
 function play(square) {
 	
-	if( square.innerHTML==='' ) {
+	if( square.innerHTML==='' && flag!=1) {
 		moves++;
 
 		if( player===1 ) {
 			square.innerHTML = 'X';
 			player = 2;
-		}
-		else {
+		}else {
 			square.innerHTML = 'O';
 			player = 1;
 		}
@@ -50,28 +56,28 @@ function play(square) {
 		var result = winner();
 		
 		if( result!==false ) {
-			document.getElementById('message').innerHTML = 'Game Over: '+result;
-			flag=0;
-		}
-		else {
+			document.getElementById('message').innerHTML = 'Game Over: ' + result;
+			flag=1;
+		}else {
 			document.getElementById('message').innerHTML = 'Keep playing';
 		}
 	}
 }
 
 /**
-	*Define the function whether the user input is exist
-	*@return {isEmptyEqual<element>}
+	*Define the function that check whether the board empty
+	*@return {isEmpty<boolean>}
 */
 
-function isEmptyEqual(rowColArray){
+function isEmpty(rowColArray){
+	var flag = true ;
 	for(var i=0;i<rowColArray.length;i++){
 		if(rowColArray[i].innerHTML==='')
-			return true;
+			return true;	
 		else 
-			return false;
-		
+			flag=false;	
 	}
+	return flag;
 }
 
 /**
@@ -91,9 +97,11 @@ function markWinner(elementArray,flag){
 
 			/** get element by class name from the array passed by reference*/
 			diagonalClass = document.getElementsByClassName(elementArray[i]);
+			
 			/** Style each element identified by class name  row and column*/
 			diagonalClass[0].style.color='red';
 		}
+
 	}
 }
 
@@ -106,70 +114,66 @@ function winner(){
 	if( moves<5 ) {
 		return false;
 	}
-
+	
 /**
-	* Iterate each box and check  whether the game is over
+	*	Clear the diagonals and arrays containing class names, for fresh value 
 */
-	for(var row=0; row<3;row++){
-		rowSquer=document.getElementsByClassName('r'+row);
+	clearArray();
 
 /**
-	* Check columens contain the same value and get one of its value X or O 
-*/		
-		if(!isEmptyEqual(rowSquer)){
+	*Check each rows , columns and Diagonals are match
+	*Style the matching line to RED
+	*@return {<string>} 
+*/
+	for(var row=0;row<3;row++){
+		/** Get each rows*/
+		rowSquer=document.getElementsByClassName('r'+row);
+		/** Check whather each rows not null and they are match*/
+		if(!isEmpty(rowSquer)){
 			if( rowSquer[0].innerHTML===rowSquer[1].innerHTML &&
 				rowSquer[0].innerHTML===rowSquer[2].innerHTML ) {
+				/**Style the values (X/O) to RED iff they are match*/
 				markWinner(rowSquer,flag);
 				return rowSquer[0].innerHTML + ' is the winner.';
 			}
 		}
 
-		for(var col=0; col<3; col++){
+		for(var col=0;col<3;col++){
+			/** get each colomns in a given row*/
 			colSquer=document.getElementsByClassName('c'+col);
-
-/**
-	* Check columens contain the same value and get one of its value X or O 
-
-*/
-			if(!isEmptyEqual(colSquer)){
+			/** Check whather each columns not null and they are match*/
+			if(!isEmpty(colSquer)){
 				if( colSquer[0].innerHTML===colSquer[1].innerHTML &&
 					colSquer[0].innerHTML===colSquer[2].innerHTML ) {
+					/**Style the values (X/O) to RED iff they are match*/
 					markWinner(colSquer,flag);
 					return colSquer[0].innerHTML + ' is the winner.';
 				}
 			}
-			
-			/**
-				* First Diagonal should be checked and push the value of the element 
-				* (X/O)class names to the array
-			*/
-			if((row===0 && col===0) || (row===1 && col===1) || (row===2 && col===2)){
-				if(rowSquer[row].innerHTML!='')
-					{
-						diagonals1.push(rowSquer[row].innerHTML);
-						diagonal1ClassName.push("r"+row + " " + "c" + col);
-						
-					}
-			}
 
-			/**
-				* Second Diagonal should be checked and push the value of the element 
-				* (X/O)class names to the array
+			/** Get each rows and columns and identify each diagonals values and collect there values */
+			var boardElment=document.getElementsByClassName('r'+row+" c"+col);
+			/** *check r0 c2 ,r1 c1 and r2 c0 diagonal coordinates and collect 
+				* there values together with there class names
 			*/
-			if((row===0 && col===2) || (row===1 && col===1) || (row===2 && col===0)){
-				if(colSquer[row].innerHTML!='')
-					{
-						diagonals2.push(colSquer[row].innerHTML)
-						diagonal2ClassName.push("r"+row + " " + "c" + col);
-					}
+			if( ((2-row)===col)){
+				diagonals2.push(boardElment[0].innerHTML);
+				diagonal2ClassName.push('r'+row+" c"+col);
 			}
-
+			/** *check r0 c0, r1 c1 and  r2 c2 diagonals coordinates and collect there values
+				*together with there class names
+			*/
+			if (row===col){
+				diagonals1.push(boardElment[0].innerHTML);
+				diagonal1ClassName.push('r'+row+" c"+col);
+			}
 		}
-	}
-	
+}
+				
 	/**
 		* Check each diagonals contain the same value X or O
 		* Check the board is on Tie State
+		* Style to RED the diagonals, when its match. 
 	*/
 
 	if((diagonals1[0]===diagonals1[1]) && (diagonals1[0]===diagonals1[2])){
@@ -184,4 +188,5 @@ function winner(){
 		return "Tie !";
 	else
 		return false;
+	
 }
