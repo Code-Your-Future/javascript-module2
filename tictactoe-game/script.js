@@ -18,8 +18,7 @@ function play(square) {
 
 		if( result!==false ) {
 			document.getElementById('message').innerHTML = 'Game Ends: '+ result;
-		}
-		else {
+		} else {
 			document.getElementById('message').innerHTML = 'Keep playing';
 		}
 	}
@@ -31,14 +30,11 @@ function checkGameOver() {
 		return false;
 	}
 
-	if(checkLine('r','1') || checkLine('r','2') || checkLine('r','3') ||
-		checkLine('c','1') || checkLine('c','2') || checkLine('c','3') ||
-		checkLine('b','1') || checkLine('g','1')) {
+	if(moves >= 5) {
 		return checkLine('r','1') || checkLine('r','2') || checkLine('r','3') ||
 					 checkLine('c','1') || checkLine('c','2') || checkLine('c','3') ||
-					 checkLine('b','1') || checkLine('g','1') && checkLine('s','q') === "X";
+					 checkLine('b','1') || checkLine('g','1');
 	}
-	//function
 
 	// 3rd: check if board is full
 	if(moves>8){
