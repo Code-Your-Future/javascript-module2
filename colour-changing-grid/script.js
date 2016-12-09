@@ -1,5 +1,5 @@
 
-/**	Initialize 10X10 board after the page load*/
+/**	Initialize 20X35 board after the page load*/
 function initializeDiv(){
 	/** Get the main container the small cell reside*/
 	var mainDiv=document.getElementById('main');
