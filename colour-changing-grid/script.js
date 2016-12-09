@@ -1,5 +1,5 @@
 
-/**	Initialize 10X10 board when the page load*/
+/**	Initialize 10X10 board after the page load*/
 function initializeDiv(){
 	/** Get the main container the small cell reside*/
 	var mainDiv=document.getElementById('main');
@@ -17,7 +17,7 @@ function initializeDiv(){
 /** Call the initialize function after the page load */
 window.onload=initializeDiv;
 
-/**	*/
+/** Select the main container class and add mouseover event listener*/
 document.querySelector('.grid').addEventListener('mouseover',function(e){
 	/** Remove the class fade while mouseover*/
 	e.target.classList.remove('fade');
