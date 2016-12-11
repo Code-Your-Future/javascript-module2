@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<script type="text/javascript">
+	var http = new XMLHttpRequest()
+
+// Specify the Method and the URL we want to access
+http.open('GET', 'https://jsonplaceholder.typicode.com/posts')
+
+// Function to be called as the request happens
+http.onreadystatechange = function() {
+    // readyState === 4 means the request has finished (http://www.w3schools.com/xml/ajax_xmlhttprequest_response.asp)
+    // status === 200  means the request was OK
+    if (this.readyState === 4 && this.status === 200) {
+        var dataAll = JSON.parse(this.responseText);
+        
+        for (var i = dataAll.length - 1; i >= 0; i--) {
+        	dataAll[i];
+        	document.write('<li>' + dataAll[i]['title'] + '</li>');
+        }
+
+
+        //console.log(this.responseText); // The body returned by the server (as a string)
+    }
+}
+
+http.send(); // Make the request
+</script>
+<body>
+
+</body>
+</html>
